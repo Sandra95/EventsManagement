@@ -6,6 +6,7 @@
     using AutoMapper;
     using DataRepository.Events;
     using DataRepository.Models;
+    using InfrastructureCrossCutting.Exceptions;
 
     public class EventsService : IEventsService
     {
@@ -22,7 +23,11 @@
         {
             var _event = await this.eventsRespository.GetEventAsync(eventId);
 
-            //if event not found
+            if (_event == null)
+            {
+                throw new NotFoundException($"Could not found event with {nameof(eventId)}={eventId}.");
+            }
+
             return this.mapper.Map<EventDto>(_event);
         }
 

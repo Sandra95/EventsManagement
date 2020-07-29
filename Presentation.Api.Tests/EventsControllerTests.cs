@@ -8,6 +8,7 @@ namespace Presentation.Api.Tests
     using ApplicationServices.Events;
     using AutoFixture;
     using EventsManagement.Controllers;
+    using InfrastructureCrossCutting.Exceptions;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
     using Xunit;
@@ -46,6 +47,26 @@ namespace Presentation.Api.Tests
             //Assert
             this.eventsService.VerifyAll();
             Assert.True(okObjectResult.StatusCode == (int)HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetEvent_IdDoesntExist_ReturnsNotFound()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+
+            this.eventsService
+                .Setup(i => i.GetEventAsync(It.IsAny<Guid>()))
+                .ThrowsAsync(new NotFoundException("Event not found"));
+
+            //Act
+            var result = await this.target.GetEvent(eventId);
+            var objectResult = result as NotFoundResult;
+
+
+            //Assert
+            this.eventsService.VerifyAll();
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.NotFound);
         }
     }
 }

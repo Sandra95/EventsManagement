@@ -9,6 +9,7 @@ namespace Application.Services.Tests
     using AutoMapper;
     using DataRepository.Events;
     using DataRepository.Models;
+    using InfrastructureCrossCutting.Exceptions;
     using Moq;
     using Xunit;
 
@@ -47,6 +48,20 @@ namespace Application.Services.Tests
                 .Verify(i => i.GetEventAsync(eventId), Times.Once);
         }
 
+        [Fact]
+        public async Task GetEventAsync_IdDoesntExist_ThrowsNotFound()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+            Event _event = null;
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(_event);
+
+            //Act && Assert
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.GetEventAsync(eventId));
+        }
         private IMapper SetupMapper()
         {
             var profiles = new Profile[]
