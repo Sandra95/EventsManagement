@@ -27,13 +27,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Services.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.4 - Infrastructure.CrossCutting", "1.4 - Infrastructure.CrossCutting", "{DE52368F-7A1A-46AF-8761-7F0BB437A1DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationDTO", "ApplicationDTO\ApplicationDTO.csproj", "{351D1B8D-5546-4328-A035-AFD535024646}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationDTO", "ApplicationDTO\ApplicationDTO.csproj", "{351D1B8D-5546-4328-A035-AFD535024646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationServices", "ApplicationServices\ApplicationServices.csproj", "{5491FD6B-23E3-40DD-AE64-F09D7A167126}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationServices", "ApplicationServices\ApplicationServices.csproj", "{5491FD6B-23E3-40DD-AE64-F09D7A167126}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRepository", "DataRepository\DataRepository.csproj", "{34320CD6-5DB4-4DA6-AD1B-06A0E64F39AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataRepository", "DataRepository\DataRepository.csproj", "{34320CD6-5DB4-4DA6-AD1B-06A0E64F39AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureCrossCutting", "InfrastructureCrossCutting\InfrastructureCrossCutting.csproj", "{B0FFCD40-3323-44F5-83D4-39D9FAB47F03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureCrossCutting", "InfrastructureCrossCutting\InfrastructureCrossCutting.csproj", "{B0FFCD40-3323-44F5-83D4-39D9FAB47F03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Scripts", "2 - Scripts", "{D5C68317-26B9-4493-8AEE-C25CD5201846}"
+	ProjectSection(SolutionItems) = preProject
+		CreateEventsTable.sql = CreateEventsTable.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
