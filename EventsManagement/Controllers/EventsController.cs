@@ -3,8 +3,10 @@
     using System;
     using System.Threading.Tasks;
     using ApplicationDTO;
+    using ApplicationDTO.Validator;
     using ApplicationServices.Events;
     using InfrastructureCrossCutting.Exceptions;
+    using InfrastructureCrossCutting.Extensions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +42,6 @@
                 //TODO: Log Error
                 return this.NotFound();
             }
-
         }
 
         /// <summary>
@@ -54,8 +55,21 @@
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostEvent(EventDto eventDto)
         {
-            var eventId = await this.eventsService.CreateEventAsync(eventDto);
-            return this.Created($"events/{eventId}", eventId);
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest($"The following parameters have invalid values: {this.ModelState.GetAllInvalidKeys()}.");
+            }
+
+            var validator = new EventDtoValidator();
+
+            if (validator.Valid(eventDto))
+            {
+                var eventId = await this.eventsService.CreateEventAsync(eventDto);
+                return this.Created($"events/{eventId}", eventId);
+            }
+
+            return this.BadRequest(validator.GetErrors());
+
         }
     }
 }

@@ -3,6 +3,7 @@ namespace Application.Services.Tests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using ApplicationDTO;
     using ApplicationServices.Adapters;
     using ApplicationServices.Events;
     using AutoFixture;
@@ -62,6 +63,29 @@ namespace Application.Services.Tests
             //Act && Assert
             await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.GetEventAsync(eventId));
         }
+
+        [Fact]
+        public async Task CreateEventAsync_EventDto_EventId()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+            var eventDto = this.fixture.Create<EventDto>();
+
+            this.eventsRepository
+                .Setup(i => i.CreateEventAsync(It.IsAny<Event>()))
+                .ReturnsAsync(eventId);
+
+            //Act
+            var result = await this.target.CreateEventAsync(eventDto);
+
+            //Assert
+            this.eventsRepository
+                .Verify(i => i.CreateEventAsync(It.IsAny<Event>()), Times.Once);
+        }
+
+
+
+
         private IMapper SetupMapper()
         {
             var profiles = new Profile[]

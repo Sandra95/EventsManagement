@@ -50,7 +50,7 @@ namespace Presentation.Api.Tests
         }
 
         [Fact]
-        public async Task GetEvent_IdDoesntExist_ReturnsNotFound()
+        public async Task GetEvent_IdDoesntExist_NotFound()
         {
             //Arrange
             var eventId = this.fixture.Create<Guid>();
@@ -67,6 +67,49 @@ namespace Presentation.Api.Tests
             //Assert
             this.eventsService.VerifyAll();
             Assert.True(objectResult.StatusCode == (int)HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task PostEvent_Event_Created()
+        {
+            //Arrange
+            var eventDto = this.fixture.Create<EventDto>();
+            var eventId = this.fixture.Create<Guid>();
+
+            this.eventsService
+                .Setup(i => i.CreateEventAsync(It.IsAny<EventDto>()))
+                .ReturnsAsync(eventId);
+
+            //Act
+            var result = await this.target.PostEvent(eventDto);
+            var objectResult = result as CreatedResult;
+
+
+            //Assert
+            this.eventsService.VerifyAll();
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.Created);
+            Assert.Equal($"events/{eventId}", objectResult.Location);
+        }
+
+        [Fact]
+        public async Task PostEvent_EventInvalidData_BadRequest()
+        {
+            //Arrange
+            var eventDto = this.fixture
+                .Build<EventDto>()
+                .With(i => i.DueDate, DateTime.Now)
+                .With(i => i.Location, string.Empty)
+                .With(i => i.Name, string.Empty)
+                .Create();
+
+            //Act
+            var result = await this.target.PostEvent(eventDto);
+            var objectResult = result as BadRequestObjectResult;
+
+
+            //Assert
+            this.eventsService.Verify(i => i.CreateEventAsync(It.IsAny<EventDto>()), Times.Never);
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.BadRequest);
         }
     }
 }
