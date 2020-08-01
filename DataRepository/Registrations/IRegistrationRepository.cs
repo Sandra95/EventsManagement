@@ -1,10 +1,11 @@
 ﻿namespace DataRepository.Registrations
 {
-    using System;
     using System.Threading.Tasks;
+    using DataRepository.Models;
+
     public interface IRegistrationRepository
     {
 
-        Task<Guid> RegisterAttendeeAsync();
+        Task<Registration> AddRegisterAsync(Registration registrationDto);
     }
 }

@@ -26,14 +26,14 @@
                 .WithOne(e => e.Event)
                 .HasForeignKey(e => e.EventId);
 
-            modelBuilder.Entity<Attendee>()
+            modelBuilder.Entity<Registration>()
                  .Property(x => x.Id)
                  .HasDefaultValue();
 
-            modelBuilder.Entity<Attendee>()
+            modelBuilder.Entity<Registration>()
                .HasMany<EventRegistration>(a => a.EventsRegistrations)
-               .WithOne(e => e.Attendee)
-               .HasForeignKey(e => e.AttendeeId);
+               .WithOne(e => e.Registration)
+               .HasForeignKey(e => e.RegistrationId);
 
             modelBuilder.Entity<EventRegistration>()
                 .HasOne<Event>(e => e.Event)
@@ -41,15 +41,15 @@
                 .HasForeignKey(fk => fk.EventId);
 
             modelBuilder.Entity<EventRegistration>()
-                .HasOne<Attendee>(x => x.Attendee)
+                .HasOne<Registration>(x => x.Registration)
                 .WithMany(s => s.EventsRegistrations)
-                .HasForeignKey(fk => fk.AttendeeId);
+                .HasForeignKey(fk => fk.RegistrationId);
 
         }
 
         public virtual DbSet<Event> Events { get; set; }
-        public virtual DbSet<Attendee> Resgistrations { get; set; }
-        public virtual DbSet<EventRegistration> EventRegistration { get; set; }
+        public virtual DbSet<Registration> Registrations { get; set; }
+        public virtual DbSet<EventRegistration> EventsRegistrations { get; set; }
 
     }
 }

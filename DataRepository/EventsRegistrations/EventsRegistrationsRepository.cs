@@ -1,20 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DataRepository.Models;
-
-namespace DataRepository.EventsRegistrations
+﻿namespace DataRepository.EventsRegistrations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DataRepository.EFContext;
+    using DataRepository.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class EventsRegistrationsRepository : IEventsRegistrationsRepository
     {
-        public Task<IEnumerable<Attendee>> GetEventRegistrationsAsync(Guid eventId)
+        private readonly EventsContext eventContext;
+
+        public EventsRegistrationsRepository(EventsContext eventContext)
         {
-            throw new NotImplementedException();
+            this.eventContext = eventContext;
         }
 
-        public Task<Guid> RegistAttendeeInEventAsync(Guid eventId, Guid attendeeId)
+        public async Task<int> CountEventRegistrationsAsync(Guid eventId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await this.eventContext
+                   .EventsRegistrations
+                   .Where(i => i.EventId == eventId)
+                   .AsNoTracking()
+                   .CountAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public async Task<IEnumerable<Registration>> GetEventRegistrationsAsync(Guid eventId)
+        {
+            try
+            {
+                return await this.eventContext
+                  .EventsRegistrations
+                  .Include(i => i.Registration)
+                  .Where(i => i.EventId == eventId)
+                  .Select(i => i.Registration)
+                  .AsNoTracking()
+                  .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task<Guid> AddRegisterToEventAsync(EventRegistration eventRegistration)
+        {
+            try
+            {
+                await this.eventContext.EventsRegistrations.AddAsync(eventRegistration);
+                await this.eventContext.SaveChangesAsync();
+                return eventRegistration.Id;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }

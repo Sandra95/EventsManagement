@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class Attendee
+    public class Registration
     {
         [Key]
         public Guid Id { get; set; }

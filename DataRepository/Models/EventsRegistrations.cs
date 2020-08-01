@@ -11,8 +11,8 @@
 
         public Event Event { get; set; }
 
-        public Guid AttendeeId { get; set; }
+        public Guid RegistrationId { get; set; }
 
-        public Attendee Attendee { get; set; }
+        public Registration Registration { get; set; }
     }
 }

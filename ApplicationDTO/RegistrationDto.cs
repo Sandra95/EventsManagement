@@ -2,10 +2,10 @@
 {
     public class RegistrationDto
     {
-        public string AttendeeName { get; set; }
+        public string Name { get; set; }
 
-        public int AttendeeAge { get; set; }
+        public int Age { get; set; }
 
-        public int AttendeeNif { get; set; }
+        public int NIF { get; set; }
     }
 }

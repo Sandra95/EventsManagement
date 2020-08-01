@@ -23,18 +23,18 @@ namespace ApplicationDTO.Validator
 
         private bool ValidateNif()
         {
-            return (this.registration.AttendeeNif > 0);
+            return (this.registration.NIF > 0);
         }
 
         private bool ValidateAge()
         {
-            return (this.registration.AttendeeAge > 0);
+            return (this.registration.Age > 0);
         }
 
         private bool ValidateName()
         {
-            return (string.IsNullOrWhiteSpace(this.registration.AttendeeName) &&
-                this.registration.AttendeeName.Length < 50);
+            return (!string.IsNullOrWhiteSpace(this.registration.Name) &&
+                this.registration.Name.Length < 50);
         }
 
         public string GetErrors()

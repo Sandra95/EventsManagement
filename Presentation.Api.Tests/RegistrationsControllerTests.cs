@@ -95,9 +95,9 @@
             var eventId = this.fixture.Create<Guid>();
             var registration = this.fixture
                 .Build<RegistrationDto>()
-                .With(i => i.AttendeeName, string.Empty)
-                .With(i => i.AttendeeAge, 0)
-                .With(i => i.AttendeeNif, 0)
+                .With(i => i.Name, string.Empty)
+                .With(i => i.Age, 0)
+                .With(i => i.NIF, 0)
                 .Create();
 
             var registrationId = this.fixture.Create<Guid>();

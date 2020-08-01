@@ -7,8 +7,10 @@
 
     public interface IEventsRegistrationsRepository
     {
-        Task<Guid> RegistAttendeeInEventAsync(Guid eventId, Guid attendeeId);
+        Task<Guid> AddRegisterToEventAsync(EventRegistration eventRegistration);
 
-        Task<IEnumerable<Attendee>> GetEventRegistrationsAsync(Guid eventId);
+        Task<IEnumerable<Registration>> GetEventRegistrationsAsync(Guid eventId);
+
+        Task<int> CountEventRegistrationsAsync(Guid eventId);
     }
 }

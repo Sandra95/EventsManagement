@@ -19,40 +19,85 @@ namespace DataRepository.Events
 
         public async Task<Guid> CreateEventAsync(Event _event)
         {
-            await this.eventsContext.AddAsync(_event);
-            await this.eventsContext.SaveChangesAsync();
-            //TODO: Do not return bd id
-            return _event.Id;
+            try
+            {
+                await this.eventsContext.AddAsync(_event);
+                await this.eventsContext.SaveChangesAsync();
+                //TODO: Do not return bd id
+                return _event.Id;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public async Task DeleteEventAsync(Guid id, Event _event)
         {
-            this.eventsContext.Events.Remove(_event);
-            await this.eventsContext.SaveChangesAsync();
+            try
+            {
+                this.eventsContext.Events.Remove(_event);
+                await this.eventsContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public async Task<Event> GetEventAsync(Guid id)
         {
-            return await this.eventsContext
-                .Events
-                .Where(e => e.Id == id)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+            try
+            {
+                return await this.eventsContext
+                      .Events
+                      .Where(e => e.Id == id)
+                      .AsNoTracking()
+                      .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public async Task<IEnumerable<Event>> GetEventsAsync()
         {
-            return await this.eventsContext
-                .Events
-                .AsNoTracking()
-                .ToListAsync();
+            try
+            {
+                return await this.eventsContext
+               .Events
+               .AsNoTracking()
+               .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public async Task UpdateEventAsync(Guid id, Event eventModel)
         {
-            this.eventsContext.Entry(eventModel).State = EntityState.Modified;
+            try
+            {
+                this.eventsContext.Entry(eventModel).State = EntityState.Modified;
 
-            await this.eventsContext.SaveChangesAsync();
+                await this.eventsContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }
