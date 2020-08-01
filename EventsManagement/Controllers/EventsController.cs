@@ -1,6 +1,7 @@
 ﻿namespace EventsManagement.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using ApplicationDTO;
     using ApplicationDTO.Validator;
@@ -25,7 +26,7 @@
 		/// </summary>
 		/// <param name="id">The identifier of the event.</param>
 		/// <returns></returns>
-		[HttpGet("", Name = nameof(GetEvent))]
+		[HttpGet("{id}", Name = nameof(GetEvent))]
         [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -34,7 +35,7 @@
         {
             try
             {
-                var eventDto = await this.eventsService.GetEventAsync(id);
+                var eventDto = await this.eventsService.TryGetEventAsync(id);
                 return this.Ok(eventDto);
             }
             catch (NotFoundException ex)
@@ -45,24 +46,38 @@
         }
 
         /// <summary>
+        /// Gets all created events.
+        /// </summary>
+        /// <param name="id">The identifier of the event.</param>
+        /// <returns></returns>
+        [HttpGet("", Name = nameof(GetEvents))]
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetEvents()
+        {
+            var events = await this.eventsService.GetEventsAsync();
+            return this.Ok(events);
+        }
+
+        /// <summary>
         /// Create new event.
         /// </summary>
         /// <param name="id">The identifier of the event.</param>
         /// <returns></returns>
         [HttpPost("", Name = nameof(PostEvent))]
-        [ProducesResponseType(typeof(EventDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PostEvent(EventDto eventDto)
+        public async Task<IActionResult> PostEvent([FromBody] EventDto eventDto)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || eventDto == null)
             {
                 return this.BadRequest($"The following parameters have invalid values: {this.ModelState.GetAllInvalidKeys()}.");
             }
 
             var validator = new EventDtoValidator();
 
-            if (validator.Valid(eventDto))
+            if (validator.Validate(eventDto))
             {
                 var eventId = await this.eventsService.CreateEventAsync(eventDto);
                 return this.Created($"events/{eventId}", eventId);
@@ -70,6 +85,68 @@
 
             return this.BadRequest(validator.GetErrors());
 
+        }
+
+        /// <summary>
+        /// Updates an exsting event.
+        /// </summary>
+        /// <param name="id">The identifier of the event.</param>
+        /// <returns></returns>
+        [HttpPut("{id}", Name = nameof(UpdateEvent))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventDto eventDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid || eventDto == null)
+                {
+                    return this.BadRequest($"The following parameters have invalid values: {this.ModelState.GetAllInvalidKeys()}.");
+                }
+
+                var validator = new EventDtoValidator();
+
+                if (validator.Validate(eventDto))
+                {
+                    await this.eventsService.UpdateEventAsync(id, eventDto);
+                    return this.NoContent();
+                }
+
+                return this.BadRequest(validator.GetErrors());
+
+            }
+            catch (NotFoundException ex)
+            {
+                return this.NotFound();
+            }
+        }
+
+
+        /// <summary>
+        /// Deletes an exsting event.
+        /// </summary>
+        /// <param name="id">The identifier of the event.</param>
+        /// <returns></returns>
+        [HttpDelete("{id}", Name = nameof(DeleteEvent))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteEvent(Guid id)
+        {
+            try
+            {
+
+                await this.eventsService.DeleteEventAsync(id);
+                return this.NoContent();
+            }
+
+            catch (NotFoundException ex)
+            {
+                return this.NotFound();
+            }
         }
     }
 }

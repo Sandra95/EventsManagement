@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataRepository.EFContext;
@@ -24,6 +25,12 @@ namespace DataRepository.Events
             return _event.Id;
         }
 
+        public async Task DeleteEventAsync(Guid id, Event _event)
+        {
+            this.eventsContext.Events.Remove(_event);
+            await this.eventsContext.SaveChangesAsync();
+        }
+
         public async Task<Event> GetEventAsync(Guid id)
         {
             return await this.eventsContext
@@ -31,6 +38,21 @@ namespace DataRepository.Events
                 .Where(e => e.Id == id)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Event>> GetEventsAsync()
+        {
+            return await this.eventsContext
+                .Events
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task UpdateEventAsync(Guid id, Event eventModel)
+        {
+            this.eventsContext.Entry(eventModel).State = EntityState.Modified;
+
+            await this.eventsContext.SaveChangesAsync();
         }
     }
 }

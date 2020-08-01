@@ -8,7 +8,7 @@ namespace ApplicationDTO.Validator
         private EventDto eventDto;
         private StringBuilder errors;
 
-        public bool Valid(EventDto eventDto)
+        public bool Validate(EventDto eventDto)
         {
             var isValid = true;
             errors = new StringBuilder();

@@ -42,7 +42,7 @@ namespace Application.Services.Tests
                 .ReturnsAsync(eventModel);
 
             //Act
-            var result = await this.target.GetEventAsync(eventId);
+            var result = await this.target.TryGetEventAsync(eventId);
 
             //Assert
             this.eventsRepository
@@ -61,7 +61,7 @@ namespace Application.Services.Tests
                 .ReturnsAsync(_event);
 
             //Act && Assert
-            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.GetEventAsync(eventId));
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.TryGetEventAsync(eventId));
         }
 
         [Fact]
@@ -83,7 +83,100 @@ namespace Application.Services.Tests
                 .Verify(i => i.CreateEventAsync(It.IsAny<Event>()), Times.Once);
         }
 
+        [Fact]
+        public async Task GetEventsAsync_NoParams_ListOfEvents()
+        {
+            //Arrange
+            var events = this.fixture.CreateMany<Event>();
 
+            this.eventsRepository
+                .Setup(i => i.GetEventsAsync())
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetEventsAsync();
+
+            //Assert
+            this.eventsRepository
+                .Verify(i => i.GetEventsAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateEventAsync_IdDoesntExist_ThrowNotFoundException()
+        {
+            //Arrange
+            var id = this.fixture.Create<Guid>();
+            var eventDto = this.fixture.Create<EventDto>();
+            Event _event = null;
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(id))
+                .ReturnsAsync(_event);
+
+            //Act && Asset
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.UpdateEventAsync(id, eventDto));
+        }
+
+        [Fact]
+        public async Task UpdateEventAsync_Id_Event_CallsEventsRepository()
+        {
+            //Arrange
+            var id = this.fixture.Create<Guid>();
+            var eventDto = this.fixture.Create<EventDto>();
+            var _event = this.fixture.Create<Event>();
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(id))
+                .ReturnsAsync(_event);
+
+            //Act
+            await this.target.UpdateEventAsync(id, eventDto);
+
+            //Asset
+            this.eventsRepository
+                .Verify(i => i.UpdateEventAsync(id, It.IsAny<Event>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteEventAsync_IdDoesntExist_ThrowsNotFoundException()
+        {
+            //Arrange
+            var id = this.fixture.Create<Guid>();
+            var eventDto = this.fixture.Create<EventDto>();
+            Event _event = null;
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(id))
+                .ReturnsAsync(_event);
+
+            //Act && Assert
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.DeleteEventAsync(id));
+        }
+
+        [Fact]
+        public async Task DeleteEventAsync_Id_Event_CallsEventsRepository()
+        {
+            //Arrange
+            var id = this.fixture.Create<Guid>();
+            var eventDto = this.fixture.Create<EventDto>();
+            var _event = this.fixture.Create<Event>();
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(id))
+                .ReturnsAsync(_event);
+
+            this.eventsRepository
+                .Setup(i => i.DeleteEventAsync(id, _event))
+                .Returns(Task.CompletedTask);
+
+            //Act
+            await this.target.DeleteEventAsync(id);
+
+            //Asset
+            this.eventsRepository
+                .Verify(i => i.DeleteEventAsync(id, _event), Times.Once);
+
+        }
 
 
         private IMapper SetupMapper()

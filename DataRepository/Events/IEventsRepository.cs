@@ -2,6 +2,7 @@
 namespace DataRepository.Events
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataRepository.Models;
 
@@ -10,5 +11,11 @@ namespace DataRepository.Events
         Task<Event> GetEventAsync(Guid id);
 
         Task<Guid> CreateEventAsync(Event _event);
+
+        Task<IEnumerable<Event>> GetEventsAsync();
+
+        Task UpdateEventAsync(Guid id, Event eventModel);
+
+        Task DeleteEventAsync(Guid id, Event eventModel);
     }
 }
