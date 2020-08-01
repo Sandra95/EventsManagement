@@ -2,6 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using ApplicationServices.Events;
+    using ApplicationServices.Registrations;
     using AutoMapper;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@
         public static IServiceCollection InitializeApplicationsServices(this IServiceCollection services)
         {
             services.AddTransient<IEventsService, EventsService>();
+            services.AddTransient<IRegistrationsService, RegistrationsService>();
 
             return services;
         }

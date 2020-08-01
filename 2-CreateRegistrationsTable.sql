@@ -1,0 +1,17 @@
+﻿
+-- Script START
+IF NOT EXISTS (SELECT * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'Registrations' AND TABLE_SCHEMA = 'dbo')
+BEGIN
+	CREATE TABLE [dbo].[Registrations](
+	[Id] UNIQUEIDENTIFIER default NEWID(),
+	[AttendeeName] [varchar](50) NOT NULL,
+	[AttendeeAge] [int]  NOT NULL,
+	[AttendeeNif] [int] NOT NULL
+		CONSTRAINT [PK_Registrations] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+	)	ON [PRIMARY]
+
+END
+-- Script END

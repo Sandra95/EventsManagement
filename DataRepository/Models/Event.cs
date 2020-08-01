@@ -1,6 +1,7 @@
 ﻿namespace DataRepository.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,5 +20,7 @@
         public int MaxAttendance { get; set; }
 
         public DateTime DueDate { get; set; }
+
+        public virtual IEnumerable<EventRegistration> EventsRegistrations { get; set; }
     }
 }

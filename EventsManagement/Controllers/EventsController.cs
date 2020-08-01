@@ -41,7 +41,7 @@
             catch (NotFoundException ex)
             {
                 //TODO: Log Error
-                return this.NotFound();
+                return this.NotFound(ex.Message);
             }
         }
 
@@ -119,7 +119,7 @@
             }
             catch (NotFoundException ex)
             {
-                return this.NotFound();
+                return this.NotFound(ex.Message);
             }
         }
 
@@ -145,7 +145,7 @@
 
             catch (NotFoundException ex)
             {
-                return this.NotFound();
+                return this.NotFound(ex.Message);
             }
         }
     }

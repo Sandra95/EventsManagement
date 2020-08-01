@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ApplicationDTO.Validator
 {
-    public class EventDtoValidator
+    public class EventDtoValidator : IValidator<EventDto>
     {
         private EventDto eventDto;
         private StringBuilder errors;

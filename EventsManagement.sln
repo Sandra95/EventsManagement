@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureCrossCutting"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Scripts", "2 - Scripts", "{D5C68317-26B9-4493-8AEE-C25CD5201846}"
 	ProjectSection(SolutionItems) = preProject
-		CreateEventsTable.sql = CreateEventsTable.sql
+		1-CreateEventsTable.sql = 1-CreateEventsTable.sql
+		2-CreateRegistrationsTable.sql = 2-CreateRegistrationsTable.sql
+		3-CreateTable_Events_Registration.sql = 3-CreateTable_Events_Registration.sql
 	EndProjectSection
 EndProject
 Global
