@@ -6,6 +6,8 @@
 
     public interface IRegistrationsService
     {
-        Task<Guid> RegisteAsync(Guid eventId, RegistrationDto registration);
+        Task<Guid> RegisterAsync(Guid eventId, RegistrationDto registration);
+
+        Task DeleteRegisterAsync(Guid eventId, Guid registrationId);
     }
 }

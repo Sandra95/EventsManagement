@@ -62,7 +62,7 @@ namespace Presentation.Api.Tests
 
             //Act
             var result = await this.target.GetEvent(eventId);
-            var notFoundResult = result as NotFoundResult;
+            var notFoundResult = result as NotFoundObjectResult;
 
 
             //Assert
@@ -205,7 +205,7 @@ namespace Presentation.Api.Tests
 
             //Act
             var result = await this.target.UpdateEvent(id, eventDto);
-            var objectResult = result as NotFoundResult;
+            var objectResult = result as NotFoundObjectResult;
 
 
             //Assert
@@ -226,7 +226,7 @@ namespace Presentation.Api.Tests
 
             //Act
             var result = await this.target.DeleteEvent(id);
-            var objectResult = result as NotFoundResult;
+            var objectResult = result as NotFoundObjectResult;
 
 
             //Assert

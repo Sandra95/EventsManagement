@@ -36,15 +36,15 @@
             var registrationId = this.fixture.Create<Guid>();
 
             this.registrationsService
-                .Setup(i => i.RegisteAsync(eventId, registration))
+                .Setup(i => i.RegisterAsync(eventId, registration))
                 .ReturnsAsync(registrationId);
 
             //Act
             var result = await this.target.PostRegistration(eventId, registration);
-            var objectResult = (CreatedAtRouteResult)result;
+            var objectResult = (CreatedResult)result;
 
             //Assert
-            Assert.Equal($"Registrations/{registrationId}", objectResult.RouteName);
+            Assert.Equal($"Registrations/{registrationId}", objectResult.Location);
             Assert.Equal((int)HttpStatusCode.Created, objectResult.StatusCode);
         }
 
@@ -57,7 +57,7 @@
             var registrationId = this.fixture.Create<Guid>();
 
             this.registrationsService
-                .Setup(i => i.RegisteAsync(eventId, registration))
+                .Setup(i => i.RegisterAsync(eventId, registration))
                 .ThrowsAsync(new NotFoundException());
 
             //Act
@@ -77,7 +77,7 @@
             var registrationId = this.fixture.Create<Guid>();
 
             this.registrationsService
-                .Setup(i => i.RegisteAsync(eventId, registration))
+                .Setup(i => i.RegisterAsync(eventId, registration))
                 .ThrowsAsync(new EventSoldOutException());
 
             //Act
@@ -103,7 +103,7 @@
             var registrationId = this.fixture.Create<Guid>();
 
             this.registrationsService
-                .Setup(i => i.RegisteAsync(eventId, registration))
+                .Setup(i => i.RegisterAsync(eventId, registration))
                 .ThrowsAsync(new NotFoundException());
 
             //Act

@@ -37,7 +37,7 @@
 
                 if (registrationValidator.Validate(registration))
                 {
-                    var resgistrationId = await this.registrationsService.RegisteAsync(eventId, registration);
+                    var resgistrationId = await this.registrationsService.RegisterAsync(eventId, registration);
                     return this.Created($"Registrations/{resgistrationId}", resgistrationId);
                 }
 
@@ -67,23 +67,14 @@
         {
             try
             {
-
-                var resgistrationId = await this.registrationsService.DeleteRegisterAsync(eventId, registrationId);
+                await this.registrationsService.DeleteRegisterAsync(eventId, registrationId);
                 return this.NoContent();
-
-
             }
             catch (NotFoundException ex)
             {
 
                 return this.NotFound(ex.Message);
             }
-
-            catch (EventSoldOutException ex)
-            {
-                return this.BadRequest(ex.Message);
-            }
-
         }
     }
 }

@@ -62,7 +62,7 @@
                 .ReturnsAsync(_event);
 
             this.eventsRegistrationsRepository
-                .Setup(i => i.CountEventRegistrationsAsync(eventId))
+                .Setup(i => i.CountEventRegistrationsAsync(_event.Id))
                 .ReturnsAsync(maxAttendance - 1);
 
             this.registrationRepository
@@ -75,7 +75,7 @@
 
 
             //Act
-            var result = await this.target.RegisteAsync(eventId, registrationDto);
+            var result = await this.target.RegisterAsync(eventId, registrationDto);
 
             //Assert
             this.eventsRepository.VerifyAll();
@@ -98,7 +98,7 @@
 
 
             //Act && Assert
-            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.RegisteAsync(eventId, registrationDto));
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.RegisterAsync(eventId, registrationDto));
         }
 
         [Fact]
@@ -119,12 +119,12 @@
                 .ReturnsAsync(_event);
 
             this.eventsRegistrationsRepository
-                .Setup(i => i.CountEventRegistrationsAsync(eventId))
+                .Setup(i => i.CountEventRegistrationsAsync(_event.Id))
                 .ReturnsAsync(maxAttendance);
 
 
             //Act && Assert
-            await Assert.ThrowsAsync<EventSoldOutException>(async () => await this.target.RegisteAsync(eventId, registrationDto));
+            await Assert.ThrowsAsync<EventSoldOutException>(async () => await this.target.RegisterAsync(eventId, registrationDto));
         }
 
 

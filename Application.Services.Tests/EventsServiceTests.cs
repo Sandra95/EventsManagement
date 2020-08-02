@@ -25,7 +25,7 @@ namespace Application.Services.Tests
         public EventsServiceTests()
         {
             this.mapper = this.SetupMapper();
-            this.fixture = new Fixture();
+            this.fixture = FixtureWithBehavior;
             this.eventsRepository = new Mock<IEventsRepository>();
             this.target = new EventsService(this.eventsRepository.Object, mapper);
         }
@@ -189,6 +189,17 @@ namespace Application.Services.Tests
             var configuration = new MapperConfiguration(cfg => cfg.AddProfiles(profiles));
 
             return new Mapper(configuration);
+        }
+
+        private Fixture FixtureWithBehavior
+        {
+            get
+            {
+                var fixture = new Fixture();
+                fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
+                fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+                return fixture;
+            }
         }
     }
 }
