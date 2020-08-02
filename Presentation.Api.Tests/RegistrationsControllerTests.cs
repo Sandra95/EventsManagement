@@ -113,5 +113,78 @@
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
         }
+
+        [Fact]
+        public async Task DeleteRegistration_EventId_RegistrationId_NoContent()
+        {
+            //Arrange
+            var registrationId = this.fixture.Create<Guid>();
+
+            this.registrationsService
+                .Setup(i => i.DeleteRegisterAsync(registrationId))
+                .Returns(Task.CompletedTask);
+
+            //Act
+            var result = await this.target.DeleteRegistration(registrationId);
+            var objectResult = (NoContentResult)result;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.NoContent, objectResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteRegistration_EventIdDoesntHaveRegistrationId_NotFound()
+        {
+            //Arrange
+            var registrationId = this.fixture.Create<Guid>();
+
+            this.registrationsService
+                .Setup(i => i.DeleteRegisterAsync(registrationId))
+                .ThrowsAsync(new NotFoundException());
+
+            //Act
+            var result = await this.target.DeleteRegistration(registrationId);
+            var objectResult = (NotFoundObjectResult)result;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetEventRegistrations_EventIdDoesntNotExist_NotFound()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+
+            this.registrationsService
+                .Setup(i => i.GetEventRegistrationsAsync(eventId))
+                .ThrowsAsync(new NotFoundException());
+
+            //Act
+            var result = await this.target.GetEventRegistrations(eventId);
+            var objectResult = (NotFoundObjectResult)result;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetEventRegistrations_EventId_Ok()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+            var events = this.fixture.CreateMany<RegistrationDto>();
+
+            this.registrationsService
+                .Setup(i => i.GetEventRegistrationsAsync(eventId))
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetEventRegistrations(eventId);
+            var objectResult = (OkObjectResult)result;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
     }
 }

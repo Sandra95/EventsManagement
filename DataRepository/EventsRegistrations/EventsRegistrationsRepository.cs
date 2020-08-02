@@ -50,7 +50,7 @@
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
 
         }
@@ -69,6 +69,37 @@
                 throw ex;
             }
 
+        }
+
+        public async Task DeleteEventRegistrationAsync(EventRegistration eventRegistration)
+        {
+            try
+            {
+                this.eventContext.Remove(eventRegistration);
+                await this.eventContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<EventRegistration> GetEventRegistrationAsync(Guid eventRegistrationId)
+        {
+            try
+            {
+                return await this.eventContext
+                    .EventsRegistrations
+                    .Where(i => i.Id == eventRegistrationId)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

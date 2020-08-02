@@ -9,8 +9,12 @@
     {
         Task<Guid> AddRegisterToEventAsync(EventRegistration eventRegistration);
 
-        Task<IEnumerable<Registration>> GetEventRegistrationsAsync(Guid eventId);
+        Task<IEnumerable<Registration>> GetEventRegistrationsAsync(Guid eventRegistrationId);
 
         Task<int> CountEventRegistrationsAsync(Guid eventId);
+
+        Task DeleteEventRegistrationAsync(EventRegistration eventRegistration);
+
+        Task<EventRegistration> GetEventRegistrationAsync(Guid eventRegistrationId);
     }
 }

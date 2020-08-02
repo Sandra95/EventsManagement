@@ -127,6 +127,84 @@
             await Assert.ThrowsAsync<EventSoldOutException>(async () => await this.target.RegisterAsync(eventId, registrationDto));
         }
 
+        [Fact]
+        public async Task DeleteRegisterAsync_EventId_RegistrationId_CallsRepository()
+        {
+            //Arrange
+            var eventRegistrationId = this.fixture.Create<Guid>();
+            var registration = this.fixture.Create<EventRegistration>();
+
+            this.eventsRegistrationsRepository
+                .Setup(i => i.GetEventRegistrationAsync(eventRegistrationId))
+                .ReturnsAsync(registration);
+
+            this.eventsRegistrationsRepository
+                .Setup(i => i.DeleteEventRegistrationAsync(It.IsAny<EventRegistration>()))
+                .Returns(Task.CompletedTask);
+
+
+            //Act
+            await this.target.DeleteRegisterAsync(eventRegistrationId);
+
+            //Assert
+            this.eventsRegistrationsRepository.VerifyAll();
+        }
+
+        [Fact]
+        public async Task DeleteRegisterAsync_EventIdDoesNotHaveRegistrationId_ThrowsNotFound()
+        {
+            //Arrange
+            var eventRegistrationId = this.fixture.Create<Guid>();
+            EventRegistration registration = null;
+
+            this.eventsRegistrationsRepository
+                .Setup(i => i.GetEventRegistrationAsync(eventRegistrationId))
+                .ReturnsAsync(registration);
+
+
+            //Act && Assert
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.DeleteRegisterAsync(eventRegistrationId));
+        }
+
+        [Fact]
+        public async Task GetEventRegistrationsAsync_EventId_ListRegistrations()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+            var _event = this.fixture.Create<Event>();
+            var registrations = this.fixture.CreateMany<Registration>();
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(eventId))
+                .ReturnsAsync(_event);
+
+            this.eventsRegistrationsRepository
+                 .Setup(i => i.GetEventRegistrationsAsync(eventId))
+                 .ReturnsAsync(registrations);
+
+            //Act
+            var result = await this.target.GetEventRegistrationsAsync(eventId);
+
+            //Assert
+            this.eventsRepository.VerifyAll();
+            this.eventsRegistrationsRepository.VerifyAll();
+        }
+
+        [Fact]
+        public async Task GetEventRegistrationsAsync_EventIdDoesNotExist_ThrowsNotFound()
+        {
+            //Arrange
+            var eventId = this.fixture.Create<Guid>();
+            Event _event = null;
+
+            this.eventsRepository
+                .Setup(i => i.GetEventAsync(eventId))
+                .ReturnsAsync(_event);
+
+            //Act && Assert
+            await Assert.ThrowsAsync<NotFoundException>(async () => await this.target.GetEventRegistrationsAsync(eventId));
+        }
+
 
         private IMapper SetupMapper()
         {
@@ -134,7 +212,8 @@
         {
                 new EventsProfile(),
                 new RegistrationProfile()
-        };
+
+         };
 
             var configuration = new MapperConfiguration(cfg => cfg.AddProfiles(profiles));
 

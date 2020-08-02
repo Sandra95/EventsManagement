@@ -1,6 +1,7 @@
 ﻿namespace ApplicationServices.Registrations
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using ApplicationDTO;
     using AutoMapper;
@@ -29,9 +30,11 @@
             this.mapper = mapper;
         }
 
-        public Task DeleteRegisterAsync(Guid eventId, Guid registrationId)
+        public async Task DeleteRegisterAsync(Guid eventRegistrationId)
         {
-            throw new NotImplementedException();
+            var eventReg = await VerifyIfEventRegistrationExistsAsync(eventRegistrationId);
+
+            await this.eventsRegistrationsRepository.DeleteEventRegistrationAsync(eventReg);
         }
 
         public async Task<Guid> RegisterAsync(Guid eventId, RegistrationDto registration)
@@ -46,6 +49,17 @@
 
             return eventRegistrationId;
         }
+
+        public async Task<IEnumerable<RegistrationDto>> GetEventRegistrationsAsync(Guid eventId)
+        {
+            await this.VerifyIfEventExistsAsync(eventId);
+
+            var registrations = await this.eventsRegistrationsRepository.GetEventRegistrationsAsync(eventId);
+
+            return this.mapper.Map<IEnumerable<RegistrationDto>>(registrations);
+        }
+
+
 
         private async Task<Guid> AddRegisterToEventAsync(Event _event, Registration resgistrationModel)
         {
@@ -67,13 +81,25 @@
             return resgistrationModel;
         }
 
+        private async Task<EventRegistration> VerifyIfEventRegistrationExistsAsync(Guid eventRegistrationId)
+        {
+            var eventReg = await this.eventsRegistrationsRepository.GetEventRegistrationAsync(eventRegistrationId);
+
+            if (eventReg == null)
+            {
+                throw new NotFoundException($"Could not found registration {eventRegistrationId} on the event.");
+            }
+
+            return eventReg;
+        }
+
         private async Task<Event> VerifyIfEventExistsAsync(Guid eventId)
         {
             var _event = await this.eventsRepository.GetEventAsync(eventId);
 
             if (_event == null)
             {
-                throw new NotFoundException("The event that you're trying to register does not exist!");
+                throw new NotFoundException("The event does not exist!");
             }
 
             return _event;
