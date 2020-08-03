@@ -94,5 +94,11 @@
             return _event;
         }
 
+        public async Task<IEnumerable<EventDto>> GetEventsAsync(string location)
+        {
+            var events = await this.eventsRespository.GetEventsAsync(location);
+
+            return this.mapper.Map<IEnumerable<EventDto>>(events);
+        }
     }
 }

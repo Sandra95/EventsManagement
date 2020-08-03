@@ -60,6 +60,24 @@
         }
 
         /// <summary>
+        /// Gets all created events.
+        /// </summary>
+        /// <param name="id">The identifier of the event.</param>
+        /// <returns></returns>
+        [HttpGet("Location", Name = nameof(GetEventsByLocation))]
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetEventsByLocation(string location)
+        {
+            if (string.IsNullOrEmpty(location))
+            {
+                return this.BadRequest("Please indicate a region");
+            }
+            var events = await this.eventsService.GetEventsAsync(location);
+            return this.Ok(events);
+        }
+
+        /// <summary>
         /// Create new event.
         /// </summary>
         /// <param name="id">The identifier of the event.</param>

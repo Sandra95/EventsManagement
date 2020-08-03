@@ -10,6 +10,8 @@ namespace DataRepository.Events
     {
         Task<Event> GetEventAsync(Guid id);
 
+        Task<IEnumerable<Event>> GetEventsAsync(string location);
+
         Task<Guid> CreateEventAsync(Event _event);
 
         Task<IEnumerable<Event>> GetEventsAsync();
@@ -17,5 +19,6 @@ namespace DataRepository.Events
         Task UpdateEventAsync(Guid id, Event eventModel);
 
         Task DeleteEventAsync(Guid id, Event eventModel);
+
     }
 }

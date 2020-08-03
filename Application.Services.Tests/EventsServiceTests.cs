@@ -102,6 +102,25 @@ namespace Application.Services.Tests
         }
 
         [Fact]
+        public async Task GetEventsAsync_Location_ListOfEvents()
+        {
+            //Arrange
+            var location = this.fixture.Create<string>();
+            var events = this.fixture.CreateMany<Event>();
+
+            this.eventsRepository
+                .Setup(i => i.GetEventsAsync(location))
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetEventsAsync(location);
+
+            //Assert
+            this.eventsRepository
+                .Verify(i => i.GetEventsAsync(location), Times.Once);
+        }
+
+        [Fact]
         public async Task UpdateEventAsync_IdDoesntExist_ThrowNotFoundException()
         {
             //Arrange

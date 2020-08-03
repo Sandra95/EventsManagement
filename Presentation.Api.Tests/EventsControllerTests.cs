@@ -92,6 +92,43 @@ namespace Presentation.Api.Tests
         }
 
         [Fact]
+        public async Task GetEvents_InvalidLocation_BadRequest()
+        {
+            //Arrange
+            var location = string.Empty;
+
+            //Act
+            var result = await this.target.GetEventsByLocation(location);
+            var okObjectResult = result as BadRequestObjectResult;
+
+
+            //Assert
+            this.eventsService.VerifyAll();
+            Assert.True(okObjectResult.StatusCode == (int)HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task GetEvents_Location_Ok()
+        {
+            //Arrange
+            var location = this.fixture.Create<string>();
+            var events = this.fixture.CreateMany<EventDto>();
+
+            this.eventsService
+                .Setup(i => i.GetEventsAsync(location))
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetEventsByLocation(location);
+            var okObjectResult = result as OkObjectResult;
+
+
+            //Assert
+            this.eventsService.VerifyAll();
+            Assert.True(okObjectResult.StatusCode == (int)HttpStatusCode.OK);
+        }
+
+        [Fact]
         public async Task PostEvent_Event_Created()
         {
             //Arrange

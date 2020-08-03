@@ -11,6 +11,8 @@
 
         Task<IEnumerable<EventDto>> GetEventsAsync();
 
+        Task<IEnumerable<EventDto>> GetEventsAsync(string location);
+
         Task<Guid> CreateEventAsync(EventDto eventDto);
 
         Task UpdateEventAsync(Guid id, EventDto eventDto);

@@ -84,6 +84,15 @@ namespace DataRepository.Events
 
         }
 
+        public async Task<IEnumerable<Event>> GetEventsAsync(string location)
+        {
+            return await this.eventsContext
+                .Events
+                .Where(i => i.Location.Equals(location))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task UpdateEventAsync(Guid id, Event eventModel)
         {
             try
