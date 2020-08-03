@@ -86,11 +86,38 @@ namespace DataRepository.Events
 
         public async Task<IEnumerable<Event>> GetEventsAsync(string location)
         {
-            return await this.eventsContext
+            try
+            {
+                return await this.eventsContext
                 .Events
                 .Where(i => i.Location.Equals(location))
                 .AsNoTracking()
                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public async Task<IEnumerable<Event>> GetComingUpEventsAsync()
+        {
+            try
+            {
+                return await this.eventsContext
+                .Events
+                .Where(i => i.DueDate >= DateTime.Now && i.DueDate <= DateTime.Now.AddDays(30))
+                .AsNoTracking()
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public async Task UpdateEventAsync(Guid id, Event eventModel)

@@ -13,9 +13,12 @@
 
         Task<IEnumerable<EventDto>> GetEventsAsync(string location);
 
+        Task<IEnumerable<EventDto>> GetComingUpEventsAsync();
+
         Task<Guid> CreateEventAsync(EventDto eventDto);
 
         Task UpdateEventAsync(Guid id, EventDto eventDto);
+
         Task DeleteEventAsync(Guid id);
     }
 }

@@ -69,6 +69,20 @@
             }
         }
 
+        public async Task<IEnumerable<EventDto>> GetEventsAsync(string location)
+        {
+            var events = await this.eventsRespository.GetEventsAsync(location);
+
+            return this.mapper.Map<IEnumerable<EventDto>>(events);
+        }
+
+        public async Task<IEnumerable<EventDto>> GetComingUpEventsAsync()
+        {
+            var events = await this.eventsRespository.GetComingUpEventsAsync();
+
+            return this.mapper.Map<IEnumerable<EventDto>>(events);
+        }
+
         public async Task DeleteEventAsync(Guid id)
         {
             try
@@ -94,11 +108,6 @@
             return _event;
         }
 
-        public async Task<IEnumerable<EventDto>> GetEventsAsync(string location)
-        {
-            var events = await this.eventsRespository.GetEventsAsync(location);
 
-            return this.mapper.Map<IEnumerable<EventDto>>(events);
-        }
     }
 }

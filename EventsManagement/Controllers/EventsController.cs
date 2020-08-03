@@ -77,6 +77,15 @@
             return this.Ok(events);
         }
 
+        [HttpGet("NextMonth", Name = nameof(GetComingUpEvents))]
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetComingUpEvents()
+        {
+            var events = await this.eventsService.GetComingUpEventsAsync();
+            return this.Ok(events);
+        }
+
         /// <summary>
         /// Create new event.
         /// </summary>

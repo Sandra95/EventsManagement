@@ -121,6 +121,25 @@ namespace Application.Services.Tests
         }
 
         [Fact]
+        public async Task GetComingUpEventsAsync_NoParams_ListOfEvents()
+        {
+            //Arrange
+            var events = this.fixture.CreateMany<Event>();
+
+            this.eventsRepository
+                .Setup(i => i.GetComingUpEventsAsync())
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetComingUpEventsAsync();
+
+            //Assert
+            this.eventsRepository
+                .Verify(i => i.GetComingUpEventsAsync(), Times.Once);
+        }
+
+
+        [Fact]
         public async Task UpdateEventAsync_IdDoesntExist_ThrowNotFoundException()
         {
             //Arrange

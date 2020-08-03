@@ -20,5 +20,7 @@ namespace DataRepository.Events
 
         Task DeleteEventAsync(Guid id, Event eventModel);
 
+        Task<IEnumerable<Event>> GetComingUpEventsAsync();
+
     }
 }

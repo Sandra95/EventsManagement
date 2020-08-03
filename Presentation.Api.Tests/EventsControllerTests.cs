@@ -129,6 +129,26 @@ namespace Presentation.Api.Tests
         }
 
         [Fact]
+        public async Task GetComingUpEvents_NoParams_Ok()
+        {
+            //Arrange
+            var events = this.fixture.CreateMany<EventDto>();
+
+            this.eventsService
+                .Setup(i => i.GetComingUpEventsAsync())
+                .ReturnsAsync(events);
+
+            //Act
+            var result = await this.target.GetComingUpEvents();
+            var okObjectResult = result as OkObjectResult;
+
+
+            //Assert
+            this.eventsService.VerifyAll();
+            Assert.True(okObjectResult.StatusCode == (int)HttpStatusCode.OK);
+        }
+
+        [Fact]
         public async Task PostEvent_Event_Created()
         {
             //Arrange
